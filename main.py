@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import math
 from hmmlearn import hmm
+import random
 
 import os
 from os.path import isfile, join
@@ -47,5 +48,67 @@ train_ligthing5 = train.iloc[:,1].values
 train_ligthing4 = train.iloc[:,2].values
 train_refrigerator = train.iloc[:,3].values
 train_microwave = train.iloc[:,4].values
+
+
+#### cuting the data
+
+
+#k - dlugosc danych, N - ile powtorzen col - ktora kolumna(urzadzenie)
+def stworz_nowe(train,k = 1000,col = 0,N = 100):
+    cutted = train.iloc[:,col].values
+    n = len(cutted)
+    np.random.randint(low = 0, high=n-k-1, size=None, dtype=int)
+
+    return None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
