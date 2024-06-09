@@ -6,7 +6,7 @@ import math
 import os
 from os.path import isfile, join
 
-
+hahaha
 ###parser part
 parser = argparse.ArgumentParser()
 parser.add_argument("--train", help="name of file of data to be train of")
