@@ -55,7 +55,6 @@ def modelowanie_log(n, X):
     X = X[4001:]
     X_train = X[:X.shape[0] // 2]
     X_validate = X[X.shape[0] // 2:]
-    best_score = best_model = None
     models = {}
     for idx in range(1, n):
         model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
@@ -63,9 +62,11 @@ def modelowanie_log(n, X):
         score = model.score(X_validate)
         models[score]= model
     models = dict(sorted(models.items()))
-    print(models)
-    x, y = models[i] for i in [-1,-2,-3]
-    print(x,y)
+    values = list(models.values())
+    last_three_values = values[-3:]
+    return(last_three_values)
+
+
 
 
 def modelowanie_AIC(n, X):
