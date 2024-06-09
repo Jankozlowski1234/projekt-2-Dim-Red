@@ -64,8 +64,8 @@ def modelowanie_log(n, X):
         models[score]= model
     models = dict(sorted(models.items()))
     values = list(models.values())
-    last_three_values = values[-3:]
-    return(last_three_values)
+    best_three_values = values[-3:]
+    return(best_three_values)
 
 
 
@@ -82,8 +82,8 @@ def modelowanie_AIC(n, X):
         models[Aic] = model
     models = dict(sorted(models.items()))
     values = list(models.values())
-    last_three_values = values[-3:]
-    return (last_three_values)
+    best_three_values = values[1:3]
+    return (best_three_values)
 
 
 #modelowanie_log(11, train_microwave)
