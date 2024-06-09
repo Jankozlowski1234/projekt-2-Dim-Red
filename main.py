@@ -47,9 +47,16 @@ train_ligthing2 = train.iloc[:,0].values
 train_ligthing5 = train.iloc[:,1].values
 train_ligthing4 = train.iloc[:,2].values
 train_refrigerator = train.iloc[:,3].values
-train_microwave = train.iloc[:,4].values
+train_microwave = train.iloc[:,4].to_numpy
+##
+def modelowanie(n, X):
+    model = hmm.GaussianHMM(n_components=n).fit(X) #czy jeszcze jakieś inne parametry?
+    hidden_states = model.predict(X)
+    print('done')
 
+    return hidden_states
 
+modelowanie(2,train_microwave)
 #### cuting the data
 
 
