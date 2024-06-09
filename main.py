@@ -82,7 +82,7 @@ def modelowanie_AIC(n, X):
         models[Aic] = model
     models = dict(sorted(models.items()))
     values = list(models.values())
-    best_three_values = values[1:3]
+    best_three_values = values[0:2]
     return (best_three_values)
 
 
