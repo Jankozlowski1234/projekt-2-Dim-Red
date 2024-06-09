@@ -49,6 +49,3 @@ ax.set_xlabel('Count')
 ax.set_ylabel('Roll')
 ax.legend()
 fig.show()
-
-
-##############################################################

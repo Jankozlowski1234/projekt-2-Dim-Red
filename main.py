@@ -36,7 +36,17 @@ else:
 tests = []
 for filename in os.listdir(TEST_NAME):
     df = pd.read_csv(os.path.join(os.getcwd(),TEST_NAME ,filename))
-    tests.append(df.iloc[:, 1])
+    df = df.iloc[:, 1].values
+    tests.append(df)
 nr_of_tests = len(tests)
 
 train = pd.read_csv(TRAIN_NAME).iloc[:,1:]
+
+train_ligthing2 = train[:,0]
+train_ligthing5 = train[:,0]
+train_ligthing4 = train[:,0]
+train_refrigerator = train[:,0]
+train_microwave = train[:,0]
+
+
+print(train_ligthing4)
