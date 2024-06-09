@@ -85,6 +85,20 @@ def modelowanie_AIC(n, X):
     best_three_values = values[0:2]
     return (best_three_values)
 
+def modelowanie_BIC(n, X):
+    X = X[4001:]
+    X_train = X[:int(0.9 * len(X))]
+    X_validate = X[int(0.9 * len(X)):]
+    models = {}
+    for idx in range(1, n):
+        model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
+        model.fit(X_train)
+        Bic = model.bic(X_validate)
+        models[Bic] = model
+    models = dict(sorted(models.items()))
+    values = list(models.values())
+    best_three_values = values[0:2]
+    return (best_three_values)
 
 #modelowanie_log(11, train_microwave)
 #### cuting the data
