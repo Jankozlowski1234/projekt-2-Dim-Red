@@ -4,6 +4,7 @@ import numpy as np
 import math
 from hmmlearn import hmm
 import random
+import itertools
 
 import os
 from os.path import isfile, join
@@ -55,6 +56,7 @@ def modelowanie_log(n, X):
     X = X[4001:]
     X_train = X[:X.shape[0] // 2]
     X_validate = X[X.shape[0] // 2:]
+    best_score = best_model = None
     models = {}
     for idx in range(1, n):
         model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
@@ -96,54 +98,21 @@ def stworz_nowe(train,k = 1000,col = 0,N = 100):
 
     return None
 
+a=[0,1,2]
+
+print(list(itertools.product(a,a,a,a,a)))
+
+'''
+
+dobre_ligthing2 = modelowanie_log(11,train_ligthing2)
+dobre_ligthing5 = modelowanie_log(11,train_ligthing5)
+dobre_ligthing4 = modelowanie_log(11,train_ligthing4)
+dobre_refrigerator =modelowanie_log(11,train_refrigerator)
+dobre_microwave =modelowanie_log(11,train_microwave)
+
+dobre = [dobre_ligthing2,dobre_ligthing5,dobre_ligthing4,dobre_refrigerator,dobre_microwave]
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+'''
