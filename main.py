@@ -86,7 +86,7 @@ def modelowanie_AIC(n, X):
     print(f'Best AIC:      {best_aic}')
 
 
-modelowanie_log(11, train_microwave)
+#modelowanie_log(11, train_microwave)
 #### cuting the data
 
 
@@ -100,19 +100,80 @@ def stworz_nowe(train,k = 1000,col = 0,N = 100):
 
 a=[0,1,2]
 
-print(list(itertools.product(a,a,a,a,a)))
+listy = list(itertools.product(a,a,a,a,a))
+do_mocy = {}
+for lis in listy:
+    do_mocy[tuple(lis)] = 0
 
-'''
-
-dobre_ligthing2 = modelowanie_log(11,train_ligthing2)
-dobre_ligthing5 = modelowanie_log(11,train_ligthing5)
-dobre_ligthing4 = modelowanie_log(11,train_ligthing4)
-dobre_refrigerator =modelowanie_log(11,train_refrigerator)
-dobre_microwave =modelowanie_log(11,train_microwave)
+n = 11
+dobre_ligthing2 = modelowanie_log(n,train_ligthing2)
+dobre_ligthing5 = modelowanie_log(n,train_ligthing5)
+dobre_ligthing4 = modelowanie_log(n,train_ligthing4)
+dobre_refrigerator =modelowanie_log(n,train_refrigerator)
+dobre_microwave =modelowanie_log(n,train_microwave)
 
 dobre = [dobre_ligthing2,dobre_ligthing5,dobre_ligthing4,dobre_refrigerator,dobre_microwave]
+print("stworzone modele")
+do_liczenia_mocy = [train_ligthing2[:4000],train_ligthing5[:4000],train_ligthing4[:4000],train_refrigerator[:4000],train_microwave[:4000]]
+jaki_dobry = [0,1,2,3,4]
+
+do_liczenia_mocy = []
+jaki_dobry = []
+
+train_inaczej = {0:train_ligthing2,1:train_ligthing5,2:train_ligthing4,3:train_refrigerator,4:train_microwave}
+
+dlugosc = 24
+for _ in range(10):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+dlugosc = 100
+for _ in range(10):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+dlugosc = 250
+for _ in range(10):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+dlugosc = 500
+for _ in range(5):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+dlugosc = 1000
+for _ in range(3):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+
+
+def co_wybierze(dobre,ktory_z_dobre,X):
+    s0 = dobre[0][ktory_z_dobre[0]].score(X)
+    s1 = dobre[1][ktory_z_dobre[1]].score(X)
+    s2 = dobre[2][ktory_z_dobre[2]].score(X)
+    s3 = dobre[3][ktory_z_dobre[3]].score(X)
+    s4 = dobre[4][ktory_z_dobre[4]].score(X)
+
+    d = {s0:0,s1:1,s2:2,s3:3,s4:4}
+    return d[max([s0,s1,s2,s3,s4])]
+for j in range(len(jaki_dobry)):
+    for k in do_mocy.keys():
+        if co_wybierze(dobre,k,do_liczenia_mocy[j])==jaki_dobry[j]:
+            do_mocy[k]+=1
+    print("pyk")
+
+print(dict(sorted(do_mocy.items(), key=lambda item: item[1])))
+print(len(jaki_dobry))
 
 
 
 
-'''
+
+
