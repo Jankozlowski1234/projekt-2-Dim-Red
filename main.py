@@ -54,9 +54,8 @@ train_microwave = train.iloc[:,4].values.reshape(-1, 1)
 ##
 def modelowanie_log(n, X):
     X = X[4001:]
-    X_train = X[:X.shape[0] // 2]
-    X_validate = X[X.shape[0] // 2:]
-    best_score = best_model = None
+    X_train = X[:int(0.9*len(X))]
+    X_validate = X[int(0.9*len(X)):]
     models = {}
     for idx in range(1, n):
         model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
@@ -72,18 +71,19 @@ def modelowanie_log(n, X):
 
 
 def modelowanie_AIC(n, X):
-    X_train = X[:X.shape[0] // 2]
-    X_validate = X[X.shape[0] // 2:]
-    best_aic = best_model_aic = None
+    X = X[4001:]
+    X_train = X[:int(0.9 * len(X))]
+    X_validate = X[int(0.9 * len(X)):]
+    models = {}
     for idx in range(1, n):
         model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
         model.fit(X_train)
-        AIC = model.aic(X_validate)
-        print(f'Model AIC #{idx}\tScore: {AIC}')
-        if best_aic is None or AIC < best_aic:
-            best_model_aic = model
-            best_aic = AIC
-    print(f'Best AIC:      {best_aic}')
+        Aic = model.aic(X_validate)
+        models[Aic] = model
+    models = dict(sorted(models.items()))
+    values = list(models.values())
+    last_three_values = values[-3:]
+    return (last_three_values)
 
 
 #modelowanie_log(11, train_microwave)
