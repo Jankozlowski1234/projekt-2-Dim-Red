@@ -49,3 +49,48 @@ ax.set_xlabel('Count')
 ax.set_ylabel('Roll')
 ax.legend()
 fig.show()
+
+
+# split our data into training and validation sets (50/50 split)
+X_train = rolls[:rolls.shape[0] // 2]
+X_validate = rolls[rolls.shape[0] // 2:]
+print(rolls)
+# check optimal score
+gen_score = gen_model.score(X_validate)
+
+best_score = best_model = None
+n_fits = 50
+np.random.seed(13)
+for idx in range(n_fits):
+    model = hmm.CategoricalHMM(
+        n_components=2, random_state=idx,
+        init_params='se')  # don't init transition, set it below
+    # we need to initialize with random transition matrix probabilities
+    # because the default is an even likelihood transition
+    # we know transitions are rare (otherwise the casino would get caught!)
+    # so let's have an Dirichlet random prior with an alpha value of
+    # (0.1, 0.9) to enforce our assumption transitions happen roughly 10%
+    # of the time
+    model.transmat_ = np.array([np.random.dirichlet([0.9, 0.1]),
+                                np.random.dirichlet([0.1, 0.9])])
+    model.fit(X_train)
+    score = model.score(X_validate)
+    if best_score is None or score > best_score:
+        best_model = model
+        best_score = score
+
+
+# use the Viterbi algorithm to predict the most likely sequence of states
+# given the model
+states = best_model.predict(rolls)
+
+# plot our recovered states compared to generated (aim 1)
+fig, ax = plt.subplots()
+ax.plot(gen_states[:500], label='generated')
+ax.plot(states[:500] + 1.5, label='recovered')
+ax.set_yticks([])
+ax.set_title('States compared to generated')
+ax.set_xlabel('Time (# rolls)')
+ax.set_xlabel('State')
+ax.legend()
+fig.show()
