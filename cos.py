@@ -51,3 +51,18 @@ ax.legend()
 fig.show()
 
 ###########################
+def modelowanie(n, X):
+    model = hmm.GaussianHMM(n_components=n).fit(X) #czy jeszcze jakieś inne parametry?
+    hidden_states = model.predict(X)
+    print('done')
+    print("Transition matrix")
+    print(model.transmat_)
+    print()
+
+    print("Means and vars of each hidden state")
+    for i in range(model.n_components):
+        print("{0}th hidden state".format(i))
+        print("mean = ", model.means_[i])
+        print("var = ", np.diag(model.covars_[i]))
+        print()
+    return hidden_states
