@@ -43,11 +43,13 @@ nr_of_tests = len(tests)
 
 train = pd.read_csv(TRAIN_NAME).iloc[:,1:]
 
-train_ligthing2 = train.iloc[:,0].values
-train_ligthing5 = train.iloc[:,1].values
-train_ligthing4 = train.iloc[:,2].values
-train_refrigerator = train.iloc[:,3].values
-train_microwave = train.iloc[:,4].to_numpy
+train_ligthing2 = train.iloc[:,0].values.reshape(-1, 1)
+train_ligthing5 = train.iloc[:,1].values.reshape(-1, 1)
+train_ligthing4 = train.iloc[:,2].values.reshape(-1, 1)
+train_refrigerator = train.iloc[:,3].values.reshape(-1, 1)
+train_microwave = train.iloc[:,4].values.reshape(-1, 1)
+
+
 ##
 def modelowanie(n, X):
     model = hmm.GaussianHMM(n_components=n).fit(X) #czy jeszcze jakieś inne parametry?
@@ -64,7 +66,7 @@ modelowanie(2,train_microwave)
 def stworz_nowe(train,k = 1000,col = 0,N = 100):
     cutted = train.iloc[:,col].values
     n = len(cutted)
-    np.random.randint(low = 0, high=n-k-1, size=None, dtype=int)
+    od_kad = np.random.randint(low = 0, high=n-k-1, size=N)
 
     return None
 
