@@ -58,7 +58,7 @@ def modelowanie(n, X):
 
     return hidden_states
 
-modelowanie(2,train_microwave)
+#modelowanie(2,train_microwave)
 #### cuting the data
 
 
@@ -68,9 +68,8 @@ def stworz_nowe(train,k = 1000,col = 0,N = 100):
     n = len(cutted)
     od_kad = np.random.randint(low = 0, high=n-k-1, size=N)
 
-    return None
-
-
+    cut = [cutted[od:(od+k)].reshape(-1, 1) for od in od_kad]
+    return cut
 
 
 
