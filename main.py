@@ -42,11 +42,10 @@ nr_of_tests = len(tests)
 
 train = pd.read_csv(TRAIN_NAME).iloc[:,1:]
 
-train_ligthing2 = train[:,0]
-train_ligthing5 = train[:,0]
-train_ligthing4 = train[:,0]
-train_refrigerator = train[:,0]
-train_microwave = train[:,0]
+train_ligthing2 = train.iloc[:,0].values
+train_ligthing5 = train.iloc[:,1].values
+train_ligthing4 = train.iloc[:,2].values
+train_refrigerator = train.iloc[:,3].values
+train_microwave = train.iloc[:,4].values
 
 
-print(train_ligthing4)
