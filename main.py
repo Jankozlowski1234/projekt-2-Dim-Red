@@ -52,29 +52,13 @@ train_microwave = train.iloc[:,4].values.reshape(-1, 1)
 
 ##
 def modelowanie(n, X):
-    X_train = X[:X.shape[0] // 2]
-    X_validate = X[X.shape[0] // 2:]
-    best_score = best_model = None
-    best_aic = best_model_aic = None
-    for idx in range(1,n):
-        model = hmm.GaussianHMM(n_components=idx) #czy jeszcze jakieś inne parametry?
-        model.fit(X_train)
-        score = model.score(X_validate)
-        print(f'Model #{idx}\tScore: {score}')
-        if best_score is None or score > best_score:
-            best_model = model
-            best_score = score
-        AIC = model.aic(X_validate)
-        print(f'Model AIC #{idx}\tScore: {AIC}')
-        if best_aic is None or AIC < best_aic:
-            best_model_aic = model
-            best_aic = AIC
+    model = hmm.GaussianHMM(n_components=n).fit(X) #czy jeszcze jakieś inne parametry?
+    hidden_states = model.predict(X)
+    print('done')
 
-    print(f'Best score:      {best_score}')
-    print(f'Best AIC:      {best_aic}')
+    return hidden_states
 
-
-modelowanie(11,train_microwave)
+modelowanie(2,train_microwave)
 #### cuting the data
 
 
