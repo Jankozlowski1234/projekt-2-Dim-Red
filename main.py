@@ -51,30 +51,39 @@ train_microwave = train.iloc[:,4].values.reshape(-1, 1)
 
 
 ##
-def modelowanie(n, X):
+def modelowanie_log(n, X):
+    X = X[4001:]
     X_train = X[:X.shape[0] // 2]
     X_validate = X[X.shape[0] // 2:]
     best_score = best_model = None
-    best_aic = best_model_aic = None
+    models = {}
     for idx in range(1, n):
         model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
         model.fit(X_train)
         score = model.score(X_validate)
-        print(f'Model #{idx}\tScore: {score}')
-        if best_score is None or score > best_score:
-            best_model = model
-            best_score = score
+        models[score]= model
+    models = dict(sorted(models.items()))
+    print(models)
+    x, y = models[i] for i in [-1,-2,-3]
+    print(x,y)
+
+
+def modelowanie_AIC(n, X):
+    X_train = X[:X.shape[0] // 2]
+    X_validate = X[X.shape[0] // 2:]
+    best_aic = best_model_aic = None
+    for idx in range(1, n):
+        model = hmm.GaussianHMM(n_components=idx)  # czy jeszcze jakieś inne parametry?
+        model.fit(X_train)
         AIC = model.aic(X_validate)
         print(f'Model AIC #{idx}\tScore: {AIC}')
         if best_aic is None or AIC < best_aic:
             best_model_aic = model
             best_aic = AIC
-
-    print(f'Best score:      {best_score}')
     print(f'Best AIC:      {best_aic}')
 
 
-modelowanie(11, train_microwave)
+modelowanie_log(11, train_microwave)
 #### cuting the data
 
 
