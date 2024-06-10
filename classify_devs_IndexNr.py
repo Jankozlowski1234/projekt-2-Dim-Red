@@ -50,7 +50,7 @@ train_inaczej = {0:train_ligthing2,1:train_ligthing5,2:train_ligthing4,3:train_r
 
 trains = [train_ligthing2,train_ligthing5,train_ligthing4,train_refrigerator,train_microwave]
 
-The_best_components = (8,8,9,10,7)
+The_best_components = (8, 16, 17, 18, 17)
 lst_the_best_model = []
 for nr,tr in zip([0,1,2,3,4],trains):
     model = hmm.GaussianHMM(n_components=The_best_components[nr])  # czy jeszcze jakieś inne parametry?
