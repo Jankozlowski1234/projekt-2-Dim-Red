@@ -25,6 +25,9 @@ ggplot(dane2,aes(x=n,y=value,col = device))+geom_line()+facet_wrap(~kryt,ncol = 
         legend.position = "bottom")
 
 
+
+### prady  
+
 prady <-(read.csv("house3_5devices_train.csv",header = T))
 n <- length(prady[,1])
 dan<-rbind(
@@ -40,13 +43,27 @@ prady$time <-as.numeric(prady$time)
 prady$amount <-as.numeric(prady$amount)
 
 ggplot(subset(prady,prady$device!="refrigerator" & prady$device!="microwave"),
-       aes(x=time,y=amount,col = device))+geom_line()
+       aes(x=time,y=amount,col = device))+geom_line()+   
+  labs(x = "time", y = "Consumption of eneregy", title = "Consumption of eneregy through time",
+       subtitle = "for different lightning devices")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.position = "bottom")
 
 ggplot(subset(prady,prady$device=="refrigerator"),
-       aes(x=time,y=amount))+geom_line(col = "purple")
+       aes(x=time,y=amount))+geom_line(col = "purple")+   
+  labs(x = "time", y = "Consumption of eneregy", title = "Consumption of eneregy of refrigerator through time")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.position = "bottom")
 
 ggplot(subset(prady,prady$device=="microwave"),
-       aes(x=time,y=log(amount)))+geom_line(col = "red")
+       aes(x=time,y=log(amount)))+geom_line(col = "red")+   
+  labs(x = "time", y = "log Consumption of eneregy", title = "Logarithm of consumption of eneregy of refrigerator",
+       subtitle = " through time")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.position = "bottom")
 
 
 
