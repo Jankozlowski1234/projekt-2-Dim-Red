@@ -113,8 +113,8 @@ def stworz_nowe(train,k = 1000,col = 0,N = 100):
     return None
 
 
-
-
+#liczenie jaki modele maja najwieksza moc
+'''
 
 #### finding the best one
 a=[0,1,2]
@@ -295,19 +295,197 @@ for w, x in sorted_dict.items():
         print("--------")
 
 
+'''
+
+
+#druga czesc szukania najepszego modelu
+'''
+
+najlepsze_modele = [(8,6,9,10,7),(8,6,9,10,8),(8,8,9,9,7),(8,8,9,9,8),(8,8,9,10,7),
+                    (8,8,9,10,8),(4,6,8,6,6),(4,8,8,6,6),(6,8,10,9,7),(6,8,10,10,7)]
+
+
+ile_do_testowania = 751
+trains = [train_ligthing2[ile_do_testowania:],train_ligthing5[ile_do_testowania:],train_ligthing4[ile_do_testowania:],
+          train_refrigerator[ile_do_testowania:],train_microwave[ile_do_testowania:]]
+
+
+d_naj_mod = {}
+moce = {}
+for mod in najlepsze_modele:
+    moce[mod] = 0
+    lst_mod = []
+    for nr,tr in zip([0,1,2,3,4],trains):
+        model = hmm.GaussianHMM(n_components=mod[nr])  # czy jeszcze jakieś inne parametry?
+        model.fit(tr)
+        lst_mod.append(model)
+    d_naj_mod[mod] = lst_mod[:]
+    moce[mod] = 0
+print("stworzono modele")
+
+
+do_liczenia_mocy = []
+jaki_dobry = []
+
+train_inaczej = {0:train_ligthing2,1:train_ligthing5,2:train_ligthing4,3:train_refrigerator,4:train_microwave}
+
+dlugosci = [24,50,75,100,125,150,175,200,300,500,750,999]
+dlug_pow = [10,10,10,10,10,10,10,10,10,10,5,2]
+for dlugosc,f in zip(dlugosci,dlug_pow):
+    if(dlugosc<ile_do_testowania):
+        for _ in range(f):
+            for i in range(5):
+                k = random.randint(0,(ile_do_testowania-1-dlugosc))
+                do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+                jaki_dobry.append(i)
+
+
+
+def jake_urzadzenie(lst_models,X):
+    s0 = lst_models[0].score(X)
+    s1 = lst_models[1].score(X)
+    s2 = lst_models[2].score(X)
+    s3 = lst_models[3].score(X)
+    s4 = lst_models[4].score(X)
+    d = {s0: 0, s1: 1, s2: 2, s3: 3, s4: 4}
+    return d[max([s0, s1, s2, s3, s4])]
+i = 0
+for j in range(len(jaki_dobry)):
+    for k in moce.keys():
+        if jake_urzadzenie(d_naj_mod[k],do_liczenia_mocy[j]) == jaki_dobry[j]:
+            moce[k] += 1
+    i += 1
+    if i % 25 == 0:
+        print(f"pyk {i}/{len(jaki_dobry)}")
+sorted_dict = dict(sorted(moce.items(), key=lambda item: item[1], reverse=True))
+
+
+
+m = max(sorted_dict.values())
+for w, x in sorted_dict.items():
+    if x == m:
+        print(f"accuracy = {m}/{len(jaki_dobry)}")
+        print(f"nr of components:{w}")
+        print("--------")
+
+'''
 
 
 
 
 
 
+ile_do_testowania = 2001
+trains = [train_ligthing2[ile_do_testowania:],train_ligthing5[ile_do_testowania:],train_ligthing4[ile_do_testowania:],
+          train_refrigerator[ile_do_testowania:],train_microwave[ile_do_testowania:]]
+
+The_best_components = (8,8,9,10,7)
+lst_the_best_model = []
+for nr,tr in zip([0,1,2,3,4],trains):
+    model = hmm.GaussianHMM(n_components=The_best_components[nr])  # czy jeszcze jakieś inne parametry?
+    model.fit(tr)
+    lst_the_best_model.append(model)
+
+def jake_urzadzenie(lst_models,X):
+    s0 = lst_models[0].score(X)
+    s1 = lst_models[1].score(X)
+    s2 = lst_models[2].score(X)
+    s3 = lst_models[3].score(X)
+    s4 = lst_models[4].score(X)
+    d = {s0: 0, s1: 1, s2: 2, s3: 3, s4: 4}
+    return d[max([s0, s1, s2, s3, s4])]
+
+
+train_inaczej = {0:train_ligthing2,1:train_ligthing5,2:train_ligthing4,3:train_refrigerator,4:train_microwave}
+
+def sprawdz_moc_dla_ustalonej_dlugosci(dlugosc,lst_the_best_model,k = 10):
+    do_liczenia_mocy = []
+    jaki_dobry = []
+
+    for _ in range(k):
+        for i in range(5):
+            k = random.randint(0,(ile_do_testowania-1-dlugosc))
+            do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+            jaki_dobry.append(i)
+
+    s = 0
+    for j in range(len(jaki_dobry)):
+        if jake_urzadzenie(lst_the_best_model, do_liczenia_mocy[j]) == jaki_dobry[j]:
+            s += 1
+
+    return s/len(jaki_dobry)
+k = 100
+dlugosci = np.array([5,10,18,24,30,50,75,100,125,150,175,200,225,250,275,300,350,400,500,750,1000,1250,1500,1750,1999])
+df1 = pd.DataFrame( columns=['power', 'length',"model"])
+for j in range(len(dlugosci)):
+    df1.loc[j] = (sprawdz_moc_dla_ustalonej_dlugosci(dlugosci[j],lst_the_best_model,k = k),dlugosci[j],str(The_best_components))
+
+
+##to many states
+The_best_components = (10,10,10,10,10)
+lst_the_best_model = []
+for nr,tr in zip([0,1,2,3,4],trains):
+    model = hmm.GaussianHMM(n_components=The_best_components[nr])  # czy jeszcze jakieś inne parametry?
+    model.fit(tr)
+    lst_the_best_model.append(model)
+
+
+dlugosci = np.array([5,10,18,24,30,50,75,100,125,150,175,200,225,250,275,300,350,400,500,750,1000,1250,1500,1750,1999])
+df2 = pd.DataFrame( columns=['power', 'length',"model"])
+for j in range(len(dlugosci)):
+    df2.loc[j] = (sprawdz_moc_dla_ustalonej_dlugosci(dlugosci[j],lst_the_best_model,k = k),dlugosci[j],str(The_best_components))
+
+##to less
+The_best_components = (2,2,2,2,2)
+lst_the_best_model = []
+for nr, tr in zip([0, 1, 2, 3, 4], trains):
+    model = hmm.GaussianHMM(n_components=The_best_components[nr])  # czy jeszcze jakieś inne parametry?
+    model.fit(tr)
+    lst_the_best_model.append(model)
+
+dlugosci = np.array(
+    [5, 10, 18, 24, 30, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 500, 750, 1000, 1250, 1500, 1750,
+     1999])
+df3 = pd.DataFrame(columns=['power', 'length', "model"])
+for j in range(len(dlugosci)):
+    df3.loc[j] = (
+    sprawdz_moc_dla_ustalonej_dlugosci(dlugosci[j], lst_the_best_model, k=k), dlugosci[j], str(The_best_components))
+
+##lights_small_rest_big
+The_best_components = (2,2,2,10,10)
+lst_the_best_model = []
+for nr, tr in zip([0, 1, 2, 3, 4], trains):
+    model = hmm.GaussianHMM(n_components=The_best_components[nr])  # czy jeszcze jakieś inne parametry?
+    model.fit(tr)
+    lst_the_best_model.append(model)
+
+dlugosci = np.array(
+    [5, 10, 18, 24, 30, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 500, 750, 1000, 1250, 1500, 1750,
+     1999])
+df4 = pd.DataFrame(columns=['power', 'length', "model"])
+for j in range(len(dlugosci)):
+    df4.loc[j] = (
+    sprawdz_moc_dla_ustalonej_dlugosci(dlugosci[j], lst_the_best_model, k=k), dlugosci[j], str(The_best_components))
+
+
+##another good one
+The_best_components = (6, 8, 10, 10, 7)
+lst_the_best_model = []
+for nr, tr in zip([0, 1, 2, 3, 4], trains):
+    model = hmm.GaussianHMM(n_components=The_best_components[nr])  # czy jeszcze jakieś inne parametry?
+    model.fit(tr)
+    lst_the_best_model.append(model)
+
+dlugosci = np.array(
+    [5, 10, 18, 24, 30, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 500, 750, 1000, 1250, 1500, 1750,
+     1999])
+df5 = pd.DataFrame(columns=['power', 'length', "model"])
+for j in range(len(dlugosci)):
+    df5.loc[j] = (
+    sprawdz_moc_dla_ustalonej_dlugosci(dlugosci[j], lst_the_best_model, k=k), dlugosci[j], str(The_best_components))
 
 
 
+df = pd.concat([df1,df2,df3,df4,df5])
 
-
-
-
-
-
-
+df.to_csv('dane_na_wykresy.csv', index=False,header=True)
