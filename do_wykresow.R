@@ -17,8 +17,8 @@ dane2$n <-as.numeric(dane2$n)
 dane2$value <-as.numeric(dane2$value)
 
 ggplot(dane2,aes(x=n,y=value,col = device))+geom_line()+facet_wrap(~kryt,ncol = 1)+   
-  labs(x = "Number of hidden states", y = "Criterion", title = "Value of criterions depending on the nr. of hidden states",
-       subtitle = "for different devices")+
+  labs(x = "Number of hidden states", y = "Criterion value", title = "Criteria values depending on the number of hidden states",
+       subtitle = "for different devices", color = "Devices")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         legend.position = "bottom")
