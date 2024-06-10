@@ -530,8 +530,8 @@ df.to_csv('dane_na_wykresy.csv', index=False,header=True)
 
 '''
 
-
-
+#second plots n vs
+'''
 trains = [train_ligthing2,train_ligthing5,train_ligthing4,train_refrigerator,train_microwave]
 witch_device = {0:"ligthing2",1:"lighting5",2:"lighting4",3:"refrigerator",4:"microwave"}
 
@@ -559,10 +559,77 @@ for n in range(1,20):
         j += 1
 
 df_2.to_csv('dane_na_wykresy_2.csv', index=False,header=True)
+'''
+
+Ns = range(1,20)
+
+
+ile_do_testowania = 1000
+trains = [train_ligthing2[ile_do_testowania:],train_ligthing5[ile_do_testowania:],train_ligthing4[ile_do_testowania:],
+          train_refrigerator[ile_do_testowania:],train_microwave[ile_do_testowania:]]
+
+
+train_inaczej = {0:train_ligthing2,1:train_ligthing5,2:train_ligthing4,3:train_refrigerator,4:train_microwave}
+
+
+do_liczenia_mocy = []
+jaki_dobry = []
+dlugosci = [24,50,75,100,125,150,175,200,300,500,750]
+n_1 = 10
+dlug_pow = [n_1 for _ in range(11)]
+for dlugosc,f in zip(dlugosci,dlug_pow):
+    if(dlugosc<ile_do_testowania):
+        for _ in range(f):
+            for i in range(5):
+                k = random.randint(0,(ile_do_testowania-1-dlugosc))
+                do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+                jaki_dobry.append(i)
+
+d_naj_mod = {}
+moce = {}
+j =0
+for n_lam,n_rest in itertools.product(Ns,Ns):
+    moce[(n_lam,n_rest)] = 0
+    mod = [n_lam,n_lam,n_lam,n_rest,n_rest]
+    lst_mod = []
+    for nr,tr in zip([0,1,2,3,4],trains):
+        model = hmm.GaussianHMM(n_components=mod[nr])
+        model.fit(tr)
+        lst_mod.append(model)
+    d_naj_mod[(n_lam,n_rest)] = lst_mod[:]
+    j += 1
+    if j%25 ==0:
+        print(f"stworzono modele {j}/{400}")
 
 
 
 
+def jake_urzadzenie(lst_models,X):
+    s0 = lst_models[0].score(X)
+    s1 = lst_models[1].score(X)
+    s2 = lst_models[2].score(X)
+    s3 = lst_models[3].score(X)
+    s4 = lst_models[4].score(X)
+    d = {s0: 0, s1: 1, s2: 2, s3: 3, s4: 4}
+    return d[max([s0, s1, s2, s3, s4])]
+i = 0
+for j in range(len(jaki_dobry)):
+    for k in moce.keys():
+        if jake_urzadzenie(d_naj_mod[k],do_liczenia_mocy[j]) == jaki_dobry[j]:
+            moce[k] += 1
+    i += 1
+    if i % 25 == 0:
+        print(f"pyk {i}/{len(jaki_dobry)}")
+sorted_dict = dict(sorted(moce.items(), key=lambda item: item[1], reverse=True))
+
+
+df_3 = pd.DataFrame(columns=['n_lamp',"n_rest",'power'])
+j = 0
+for k in moce.keys():
+    df_3.loc[j] = (k[0],k[1],moce[k]/len(jaki_dobry))
+    j+=1
+
+df_3.to_csv('dane_na_wykresy_3.csv', index=False,header=True)
 
 
 
