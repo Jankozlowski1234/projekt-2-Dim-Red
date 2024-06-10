@@ -5,8 +5,7 @@ dane1$power <-as.numeric(dane1$power)
 dane1$length <-as.numeric(dane1$length)
 
 ggplot(dane1,aes(x=length,y=power,col = model))+geom_line()+   
-  labs(x = "Length of the examined data", y = "Power", title = "Power for length of the examined data",
-       subtitle = "for different models")+
+  labs(x = "Sample size", y = "Effectiveness", title = "Efficiency of models depending on sample size", color = "Models")+
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
         legend.position = "bottom")
