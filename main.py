@@ -65,7 +65,7 @@ def modelowanie_log(n, X):
     models = dict(sorted(models.items()))
     values = list(models.values())
     best_three_values = values[-3:]
-    return(best_three_values)
+    return best_three_values
 
 
 
@@ -82,8 +82,8 @@ def modelowanie_AIC(n, X):
         models[Aic] = model
     models = dict(sorted(models.items()))
     values = list(models.values())
-    best_three_values = values[0:2]
-    return (best_three_values)
+    best_three_values = values[0:3]
+    return best_three_values
 
 def modelowanie_BIC(n, X):
     X = X[4001:]
@@ -97,8 +97,8 @@ def modelowanie_BIC(n, X):
         models[Bic] = model
     models = dict(sorted(models.items()))
     values = list(models.values())
-    best_three_values = values[0:2]
-    return (best_three_values)
+    best_three_values = values[0:3]
+    return best_three_values
 
 #modelowanie_log(11, train_microwave)
 #### cuting the data
@@ -112,6 +112,11 @@ def stworz_nowe(train,k = 1000,col = 0,N = 100):
 
     return None
 
+
+
+
+
+#### finding the best one
 a=[0,1,2]
 
 listy = list(itertools.product(a,a,a,a,a))
@@ -126,10 +131,27 @@ dobre_ligthing4 = modelowanie_log(n,train_ligthing4)
 dobre_refrigerator =modelowanie_log(n,train_refrigerator)
 dobre_microwave =modelowanie_log(n,train_microwave)
 
-dobre = [dobre_ligthing2,dobre_ligthing5,dobre_ligthing4,dobre_refrigerator,dobre_microwave]
+dobre = [dobre_ligthing2[:],dobre_ligthing5[:],dobre_ligthing4[:],dobre_refrigerator[:],dobre_microwave[:]]
+
+
+
+dobre_ligthing2 = modelowanie_AIC(n,train_ligthing2)
+dobre_ligthing5 = modelowanie_AIC(n,train_ligthing5)
+dobre_ligthing4 = modelowanie_AIC(n,train_ligthing4)
+dobre_refrigerator =modelowanie_AIC(n,train_refrigerator)
+dobre_microwave =modelowanie_AIC(n,train_microwave)
+
+dobre_AIC = [dobre_ligthing2[:],dobre_ligthing5[:],dobre_ligthing4[:],dobre_refrigerator[:],dobre_microwave[:]]
+
+dobre_ligthing2 = modelowanie_BIC(n,train_ligthing2)
+dobre_ligthing5 = modelowanie_BIC(n,train_ligthing5)
+dobre_ligthing4 = modelowanie_BIC(n,train_ligthing4)
+dobre_refrigerator =modelowanie_BIC(n,train_refrigerator)
+dobre_microwave =modelowanie_BIC(n,train_microwave)
+
+dobre_BIC = [dobre_ligthing2[:],dobre_ligthing5[:],dobre_ligthing4[:],dobre_refrigerator[:],dobre_microwave[:]]
 print("stworzone modele")
-do_liczenia_mocy = [train_ligthing2[:4000],train_ligthing5[:4000],train_ligthing4[:4000],train_refrigerator[:4000],train_microwave[:4000]]
-jaki_dobry = [0,1,2,3,4]
+
 
 do_liczenia_mocy = []
 jaki_dobry = []
@@ -137,19 +159,32 @@ jaki_dobry = []
 train_inaczej = {0:train_ligthing2,1:train_ligthing5,2:train_ligthing4,3:train_refrigerator,4:train_microwave}
 
 dlugosc = 24
-for _ in range(10):
+for _ in range(5):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+dlugosc = 50
+for _ in range(5):
     for i in range(5):
         k = random.randint(0,(4000-1-dlugosc))
         do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
         jaki_dobry.append(i)
 dlugosc = 100
-for _ in range(10):
+for _ in range(5):
     for i in range(5):
         k = random.randint(0,(4000-1-dlugosc))
         do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
         jaki_dobry.append(i)
+dlugosc = 150
+for _ in range(5):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+
 dlugosc = 250
-for _ in range(10):
+for _ in range(5):
     for i in range(5):
         k = random.randint(0,(4000-1-dlugosc))
         do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
@@ -161,11 +196,24 @@ for _ in range(5):
         do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
         jaki_dobry.append(i)
 dlugosc = 1000
-for _ in range(3):
+for _ in range(5):
     for i in range(5):
         k = random.randint(0,(4000-1-dlugosc))
         do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
         jaki_dobry.append(i)
+dlugosc = 2000
+for _ in range(5):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+dlugosc = 3000
+for _ in range(5):
+    for i in range(5):
+        k = random.randint(0,(4000-1-dlugosc))
+        do_liczenia_mocy.append(train_inaczej[i][k:(k+dlugosc)])
+        jaki_dobry.append(i)
+
 
 
 def co_wybierze(dobre,ktory_z_dobre,X):
@@ -177,14 +225,86 @@ def co_wybierze(dobre,ktory_z_dobre,X):
 
     d = {s0:0,s1:1,s2:2,s3:3,s4:4}
     return d[max([s0,s1,s2,s3,s4])]
+
+i = 0
 for j in range(len(jaki_dobry)):
     for k in do_mocy.keys():
         if co_wybierze(dobre,k,do_liczenia_mocy[j])==jaki_dobry[j]:
             do_mocy[k]+=1
-    print("pyk")
+    i+=1
+    if i % 10 ==0:
+        print(f"pyk {i}/{len(jaki_dobry)}")
+sorted_dict = dict(sorted(do_mocy.items(), key=lambda item: item[1],reverse= True))
 
-print(dict(sorted(do_mocy.items(), key=lambda item: item[1])))
-print(len(jaki_dobry))
+
+m= max(sorted_dict.values())
+for w,x in sorted_dict.items():
+    if x==m:
+        print(f"log accuracy = {m}/{len(jaki_dobry)}")
+        for dev in range(5):
+            print(f"device {dev}, numer of components: {dobre[dev][w[dev]].n_components}")
+        print("--------")
+
+
+
+
+for k in do_mocy.keys():
+    do_mocy[k] = 0
+
+i = 0
+for j in range(len(jaki_dobry)):
+    for k in do_mocy.keys():
+        if co_wybierze(dobre_AIC,k,do_liczenia_mocy[j])==jaki_dobry[j]:
+            do_mocy[k]+=1
+    i+=1
+    if i % 10 ==0:
+        print(f"pyk {i}/{len(jaki_dobry)}")
+sorted_dict = dict(sorted(do_mocy.items(), key=lambda item: item[1],reverse= True))
+
+
+m= max(sorted_dict.values())
+for w,x in sorted_dict.items():
+    if x==m:
+        print(f"AIC accuracy = {m}/{len(jaki_dobry)}")
+        for dev in range(5):
+            print(f"device {dev}, numer of components: {dobre[dev][w[dev]].n_components}")
+        print("--------")
+
+
+
+
+for k in do_mocy.keys():
+    do_mocy[k] = 0
+
+i = 0
+for j in range(len(jaki_dobry)):
+    for k in do_mocy.keys():
+        if co_wybierze(dobre_BIC, k, do_liczenia_mocy[j]) == jaki_dobry[j]:
+            do_mocy[k] += 1
+    i += 1
+    if i % 10 == 0:
+        print(f"pyk {i}/{len(jaki_dobry)}")
+sorted_dict = dict(sorted(do_mocy.items(), key=lambda item: item[1], reverse=True))
+
+m = max(sorted_dict.values())
+for w, x in sorted_dict.items():
+    if x == m:
+        print(f"BIC accuracy = {m}/{len(jaki_dobry)}")
+        for dev in range(5):
+            print(f"device {dev}, numer of components: {dobre[dev][w[dev]].n_components}")
+        print("--------")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
