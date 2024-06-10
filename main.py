@@ -1,13 +1,13 @@
 import argparse
 import pandas as pd
 import numpy as np
-import math
+
 from hmmlearn import hmm
 import random
 import itertools
 
 import os
-from os.path import isfile, join
+
 
 
 ###parser part
@@ -114,7 +114,7 @@ def stworz_nowe(train,k = 1000,col = 0,N = 100):
 
 
 #liczenie jaki modele maja najwieksza moc
-'''
+
 
 #### finding the best one
 a=[0,1,2]
@@ -124,7 +124,7 @@ do_mocy = {}
 for lis in listy:
     do_mocy[tuple(lis)] = 0
 
-n = 11
+n = 20
 dobre_ligthing2 = modelowanie_log(n,train_ligthing2)
 dobre_ligthing5 = modelowanie_log(n,train_ligthing5)
 dobre_ligthing4 = modelowanie_log(n,train_ligthing4)
@@ -295,7 +295,7 @@ for w, x in sorted_dict.items():
         print("--------")
 
 
-'''
+
 
 
 #druga czesc szukania najepszego modelu
@@ -372,7 +372,7 @@ for w, x in sorted_dict.items():
 
 
 
-
+'''
 
 
 ile_do_testowania = 2001
@@ -489,3 +489,4 @@ for j in range(len(dlugosci)):
 df = pd.concat([df1,df2,df3,df4,df5])
 
 df.to_csv('dane_na_wykresy.csv', index=False,header=True)
+'''
