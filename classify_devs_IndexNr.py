@@ -73,7 +73,7 @@ witch_device = {0:"ligthing2",1:"lighting5",2:"lighting4",3:"refrigerator",4:"mi
 
 with open(RESULT_NAME, "w") as file1:
     # Writing data to a file
-    file1.write("file , dev_classified \n")
+    file1.write("file,dev_classified \n")
     for filename in os.listdir(TEST_NAME):
         df = pd.read_csv(os.path.join(os.getcwd(),TEST_NAME ,filename))
         df = df.iloc[:, 1].values.reshape(-1, 1)

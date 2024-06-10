@@ -24,6 +24,28 @@ ggplot(dane2,aes(x=n,y=value,col = device))+geom_line()+facet_wrap(~kryt,ncol = 
         plot.subtitle = element_text(hjust = 0.5),
         legend.position = "bottom")
 
+dane3 = data.frame(read.csv("dane_na_wykresy_3.csv",header = T))
+dane3$n_lamp <-as.numeric(dane3$n_lamp)
+dane3$n_rest <-as.numeric(dane3$n_rest)
+dane3$power <-as.numeric(dane3$power)
+colnames(dane3)[3]<-"Effectiveness"
+
+ggplot(dane3, aes(n_lamp, n_rest, fill= Effectiveness)) + 
+  geom_tile()+   
+  labs(x = "Number of hidden states of lamps", y = "Number of hidden states of rest", title = "Effectiveness of model ",
+       subtitle = "for different number of states")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())+ 
+  scale_x_continuous(breaks=seq(1, 19, 1))+ 
+  scale_y_continuous(breaks=seq(1, 19, 1))
+
 
 
 ### prady  
